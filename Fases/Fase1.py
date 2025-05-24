@@ -1,8 +1,10 @@
-from Mecanicas.skill import *
-from Mecanicas.dinheiro import *
-from Mecanicas.eficiencia import *
-from Mecanicas.progresso_jogo import Progresso_Jogo
+from Mecanicas.Skills import *
+from Mecanicas.Dinheiro import *
+from Mecanicas.Eficiencia import *
+from Progresso.Progresso_jogo import Progresso_Jogo
 
 class Fase1:
     def rodar_jogo(self):
-        while
+        while(True):
+            print("Fase 1")
+            
