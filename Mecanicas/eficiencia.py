@@ -1,4 +1,4 @@
-import Mecanicas.dinheiro as Dinheiro
+import Dinheiro as Dinheiro
 
 class Eficiencia():
     def __init__(self):
@@ -37,8 +37,7 @@ class Eficiencia():
         base = 1.0
         for item in self.itens:
             if item["ativo"]:
-                self.base += item["modificador"]
-
+                base += item["modificador"]
         self.eficiencia = base
 
     def comprar_item(self, nome_item, dinheiro):
