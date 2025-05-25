@@ -1,6 +1,6 @@
 import json
 import time
-from Mecanicas.Dinheiro import Dinheiro
+from Mecanicas.dinheiro import Dinheiro
 from Mecanicas.Skills import CLASSES_ATIVAS
 
 class SalvarJogo:
