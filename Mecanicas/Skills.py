@@ -12,7 +12,6 @@ CLASSES_ATIVAS = {
 class Skill(ABC):
     def __init__(self):
         self.nivel = 0
-        self.desbloqueado = False
         self.nivel_necessario = None
         self.tempo_acumulado = 0
         self.tempo_desbloqueio = None
@@ -29,7 +28,7 @@ class Skill(ABC):
 
     def desbloquear(self):
         if self.nivel >= self.nivel_necessario:
-            self.desbloqueado = True
+            self.nivel = 0
             self.efeito_especial()  # Chama o método abstrato
 
     @abstractmethod
