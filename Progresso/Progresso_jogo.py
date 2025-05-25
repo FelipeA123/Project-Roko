@@ -1,14 +1,16 @@
 import json
 import time
 from Mecanicas.Dinheiro import Dinheiro
+from Mecanicas.Skills import CLASSES_ATIVAS
 
 class SalvarJogo:
-    def __init__(self, dinheiro):
+    def __init__(self, dinheiro: Dinheiro):
         self.dinheiro = dinheiro
 
     def salvar(self):
         save_data = {
-            "dinheiro": self.dinheiro.valor
+            "dinheiro": self.dinheiro.saldo,
+            "classes_ativas": CLASSES_ATIVAS
             # Adicione outros dados do jogo aqui
         }
         with open("Progresso/save.json", "w") as f:
