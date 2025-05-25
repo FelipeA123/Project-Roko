@@ -1,6 +1,6 @@
 import time
 from abc import ABC, abstractmethod
-from Eficiencia import Eficiencia
+from Mecanicas.Eficiencia import Eficiencia
 
 # Variável global para controle de ativação das classes de ensino
 CLASSES_ATIVAS = {
