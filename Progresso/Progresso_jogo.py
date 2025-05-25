@@ -1,9 +1,21 @@
+import json
+import time
+from Mecanicas.Dinheiro import Dinheiro
 
-class Progresso_Jogo():
-    def __init__(self):
-        self.fase_terminada = False
-        self.progresso = 0.0
+class SalvarJogo:
+    def __init__(self, dinheiro):
+        self.dinheiro = dinheiro
 
-    def progresso_concluido(self):
-        if self.progresso >= 100.0:
-            self.fase_terminada = True
+    def salvar(self):
+        save_data = {
+            "dinheiro": self.dinheiro.valor
+            # Adicione outros dados do jogo aqui
+        }
+        with open("Progresso/save.json", "w") as f:
+            json.dump(save_data, f)
+        print("Progresso salvo!")
+
+    def salvar_periodicamente(self, intervalo=60):
+        while True:
+            self.salvar()
+            time.sleep(intervalo)

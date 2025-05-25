@@ -2,6 +2,13 @@ import time
 from abc import ABC, abstractmethod
 from Eficiencia import Eficiencia
 
+# Variável global para controle de ativação das classes de ensino
+CLASSES_ATIVAS = {
+    "Doutorado": False,
+    "Mestrado": False,
+    "Faculdade": False,
+    "Cursinho": False
+}
 class Skill(ABC):
     def __init__(self):
         self.nivel = 0
