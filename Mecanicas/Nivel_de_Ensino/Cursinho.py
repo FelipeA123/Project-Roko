@@ -26,10 +26,10 @@ class Cursinho(Skill):
             return
         
         print("Realizando teste de usabilidade...")
-        segundos = 0
-        while (segundos * eficiencia) < 10:
+        segundos = 0.0
+        while segundos < 10:
             time.sleep(1)
-            segundos += 1
+            segundos += 1 * eficiencia
         dinheiro.saldo += 50
         print ("Você foi pago em 50 reais, nada mal!")
 
