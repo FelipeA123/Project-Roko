@@ -27,7 +27,7 @@ class Cursinho(Skill):
 
         while True:
             if ativo:
-                dinheiro.adicao(1.0)
+                dinheiro.adicao(10.0)
                 print(f"Dinheiro atual: {dinheiro.saldo}")
                 segundos += 1
                 if not CLASSES_ATIVAS["Faculdade"]:
