@@ -2,7 +2,7 @@ Estrutura Geral do Jogo
 
 Bem-vindo ao jogo! (Você perdeu)
 
-Este projeto combina elementos de clicker, narrativa baseada em texto e escolhas que impactam o destino da humanidade. O jogo é dividido em três fases principais, cada uma com mecânicas e objetivos distintos, culminando em múltiplos finais determinados pelas suas decisões.
+Este projeto combina elementos de clicker, narrativa baseada em texto e escolhas que impactam o destino da humanidade. O jogo é dividido em três fases principais (OBS: Atualmente apenas a primeira parte será implementada), cada uma com mecânicas e objetivos distintos, culminando em múltiplos finais determinados pelas suas decisões.
 
 📌 Fase 1 – Mecânicas de "Clicker"
 Ações principais:
