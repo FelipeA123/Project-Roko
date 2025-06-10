@@ -11,10 +11,12 @@ from Mecanicas.Nivel_de_Ensino.Doutorado import *
 class Fase1:
     def rodar_jogo(self):
         dinheiro = Dinheiro()
-        skill = Skill()
-        eficiencia = Eficiencia()
+        Skill = Skill()
+        Eficiencia = Eficiencia()
         fazerroko = FazerRoko()
 
         while not fazerroko.roko_criado:
             while not CLASSES_ATIVAS["Cursinho"]:
-            
+                print("Você precisa fazer o cursinho antes de começar a faculdade.")
+                Cursinho().rodar_jogo()
+                dinheiro.adicionar_dinheiro(1000)

@@ -14,7 +14,6 @@ class Cursinho(Skill):
         self._taxa_thread = None
         self._taxa_ativa = False
 
-
     def efeito_especial(self):
         CLASSES_ATIVAS["Cursinho"] = True
         print("Cursinho desbloqueado, você pode fazer teste de usabilidade para ganhar dinheiro.")
@@ -36,7 +35,7 @@ class Cursinho(Skill):
     def _pagamento_taxa_loop(self, dinheiro: Dinheiro):
         while self._taxa_ativa:
             time.sleep(60)
-            self._pagar_taxa(dinheiro)
+            self.pagar_taxa(dinheiro)
 
     def _iniciar_pagamento_taxa(self):
         if not self._taxa_ativa:
@@ -61,6 +60,3 @@ class Cursinho(Skill):
             print("Saldo insuficiente para pagar a inscrição do Cursinho. Cursinho será desativado.")
             CLASSES_ATIVAS["Cursinho"] = False
             self.parar_pagamento_taxa()
-        
-
-        

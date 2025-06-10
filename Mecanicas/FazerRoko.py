@@ -1,6 +1,5 @@
 import time
-from Skills import CLASSES_ATIVAS
-from Skills import Skill
+from Mecanicas.Skills import CLASSES_ATIVAS
 from Mecanicas.Eficiencia import Eficiencia
 
 CORTE_NIVEL_ENSINO = {

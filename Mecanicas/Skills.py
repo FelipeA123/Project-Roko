@@ -21,7 +21,7 @@ class Skill(ABC):
             raise ValueError("tempo_desbloqueio não foi definido!")
         while self.tempo_acumulado < self.tempo_desbloqueio:
             time.sleep(1)
-            self.tempo_acumulado += 1 * eficiencia
+            self.tempo_acumulado += 1 * eficiencia.eficiencia
         self.tempo_acumulado = 0
         self.nivel += 1
         self.desbloquear()
