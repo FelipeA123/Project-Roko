@@ -1,9 +1,3 @@
-from Progresso.Progresso_jogo import SalvarJogo
-from Mecanicas.Dinheiro import Dinheiro
+from Fases.Fase2 import rodar_jogo
 
-dinheiro = Dinheiro()
-dinheiro.valor = 100.0
-
-salvar = SalvarJogo(dinheiro)
-# Para salvar a cada 1 minuto:
-salvar.salvar_periodicamente(60)
+fase_2 = rodar_jogo()

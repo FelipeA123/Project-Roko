@@ -1,49 +1,62 @@
 import time
-from Mecanicas.Skills import Skill
+import threading
+from Mecanicas.Skills import Skill, CLASSES_ATIVAS
 from Mecanicas.Dinheiro import Dinheiro
-from Mecanicas.Skills import CLASSES_ATIVAS
+from Mecanicas.Eficiencia import Eficiencia
+
 
 class Cursinho(Skill):
     def __init__(self):
         super().__init__()
         self.nivel_necessario = 15
         self.tempo_desbloqueio = 10
-    
-    def ativar(self):
-        self.ativo = True
-        CLASSES_ATIVAS["Cursinho"] = True
-
-    def desativar(self):
-        self.ativo = False
-        CLASSES_ATIVAS["Cursinho"] = False
+        self.taxa_inscricao = 50.0
+        self._taxa_thread = None
+        self._taxa_ativa = False
 
     def efeito_especial(self):
-        dinheiro = Dinheiro()
-        dinheiro.adicao(200.0)
-        print("Efeito especial do Cursinho ativado!")
-        print("Você ganhará 1.0 de dinheiro a cada segundo enquanto o efeito estiver ativo.")
-        segundos = 0
-        ativo = True
+        CLASSES_ATIVAS["Cursinho"] = True
+        print("Cursinho desbloqueado, você pode fazer teste de usabilidade para ganhar dinheiro.")
+        self._iniciar_pagamento_taxa()
 
-        while True:
-            if ativo:
-                dinheiro.adicao(10.0)
-                print(f"Dinheiro atual: {dinheiro.saldo}")
-                segundos += 1
-                if not CLASSES_ATIVAS["Faculdade"]:
-                    if segundos >= 60:
-                        if dinheiro.subtracao(50.0):
-                            print("Taxa de 50 reais descontada para manter o Cursinho ativo.")
-                            segundos = 0
-                        else:
-                            print("Saldo insuficiente para manter o Cursinho ativo. Aguardando saldo suficiente para reativar...")
-                            ativo = False
-                            segundos = 0
-                else:
-                    # Tenta descontar a taxa a cada segundo até conseguir
-                    if dinheiro.subtracao(50.0):
-                        print("Cursinho reativado!")
-                        ativo = True
-                    else:
-                        print("Aguardando saldo suficiente para reativar o Cursinho...")
-                time.sleep(1)
+    def ganhar_dinheiro(self, dinheiro: Dinheiro, eficiencia: Eficiencia):
+        if not CLASSES_ATIVAS["Cursinho"]:
+            print("Cursinho inativo")
+            return
+        
+        print("Realizando teste de usabilidade...")
+        segundos = 0.0
+        while segundos < 10:
+            time.sleep(1)
+            segundos += 1 * eficiencia
+        dinheiro.saldo += 50
+        print ("Você foi pago em 50 reais, nada mal!")
+
+    def _pagamento_taxa_loop(self, dinheiro: Dinheiro):
+        while self._taxa_ativa:
+            time.sleep(60)
+            self.pagar_taxa(dinheiro)
+
+    def _iniciar_pagamento_taxa(self):
+        if not self._taxa_ativa:
+            self._taxa_ativa = True
+            self._taxa_thread = threading.Thread(target=self._pagamento_taxa_loop, args=(Dinheiro(),), daemon=True)
+            self._taxa_thread.start()
+
+    def parar_pagamento_taxa(self):
+        self._taxa_ativa = False
+        print("Pagamento automático da taxa do Cursinho parado.")
+
+    def pagar_taxa(self, dinheiro: Dinheiro):
+        if not CLASSES_ATIVAS["Cursinho"]:
+            return
+        if CLASSES_ATIVAS["Faculdade"]:
+            print("Faculdade ativa! Não é mais necessário pagar a inscrição do Cursinho.")
+            return
+
+        if dinheiro.subtracao(self.taxa_inscricao):
+            print(f"Taxa de inscrição de R${self.taxa_inscricao:.2f} paga para manter o Cursinho ativo.")
+        else:
+            print("Saldo insuficiente para pagar a inscrição do Cursinho. Cursinho será desativado.")
+            CLASSES_ATIVAS["Cursinho"] = False
+            self.parar_pagamento_taxa()
