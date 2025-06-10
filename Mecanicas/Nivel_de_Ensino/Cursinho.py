@@ -1,8 +1,10 @@
 import time
 import threading
-from Mecanicas.Skills import Skill, CLASSES_ATIVAS
+from Mecanicas.Skills import Skill
 from Mecanicas.Dinheiro import Dinheiro
 from Mecanicas.Eficiencia import Eficiencia
+
+from Progresso.Variaveis_Globais import CLASSES_ATIVAS
 
 
 class Cursinho(Skill):
@@ -13,23 +15,23 @@ class Cursinho(Skill):
         self.taxa_inscricao = 50.0
         self._taxa_thread = None
         self._taxa_ativa = False
+        global CLASSES_ATIVAS
 
     def efeito_especial(self):
-        CLASSES_ATIVAS["Cursinho"] = True
-        print("Cursinho desbloqueado, você pode fazer teste de usabilidade para ganhar dinheiro.")
-        self._iniciar_pagamento_taxa()
+        CLASSES_ATIVAS["Faculdade"] = True
+        print("Faculdade desbloqueada, você pode estágio para ganhar dinheiro.")
+
+    def subir_nivel(self, eficiencia):
+        super().subir_nivel(eficiencia)
+        print("Você se esforça para prestar atenção apesar da lentidão")
 
     def ganhar_dinheiro(self, dinheiro: Dinheiro, eficiencia: Eficiencia):
-        if not CLASSES_ATIVAS["Cursinho"]:
-            print("Cursinho inativo")
-            return
-        
         print("Realizando teste de usabilidade...")
         segundos = 0.0
         while segundos < 10:
             time.sleep(1)
-            segundos += 1 * eficiencia
-        dinheiro.saldo += 50
+            segundos += eficiencia.eficiencia
+        dinheiro.adicao(50.0)
         print ("Você foi pago em 50 reais, nada mal!")
 
     def _pagamento_taxa_loop(self, dinheiro: Dinheiro):

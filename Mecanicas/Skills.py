@@ -2,13 +2,6 @@ import time
 from abc import ABC, abstractmethod
 from Mecanicas.Eficiencia import Eficiencia
 
-# Variável global para controle de ativação das classes de ensino
-CLASSES_ATIVAS = {
-    "Doutorado": False,
-    "Mestrado": False,
-    "Faculdade": False,
-    "Cursinho": False
-}
 class Skill(ABC):
     def __init__(self):
         self.nivel = 0
@@ -33,4 +26,8 @@ class Skill(ABC):
 
     @abstractmethod
     def efeito_especial(self):
+        pass
+
+    @abstractmethod
+    def ganhar_dinheiro(self):
         pass

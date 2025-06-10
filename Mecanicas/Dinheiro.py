@@ -17,21 +17,11 @@ class Dinheiro():
                 except Exception:
                     self.saldo = 0.0
 
+
     def adicao(self, valor: float):
-        if valor <= 0:
-            print("A quantia digitada deve ser maior que zero.\n")
-            return False
-        else:
+        if valor > 0:
             self.saldo += valor
-            return True
         
     def subtracao(self, valor:float):
-        if valor <= 0:
-            print("A quantia digitada deve ser maior que zero.\n")
-            return False
-        elif self.saldo >= valor:
+        if valor > 0 and self.saldo >=valor:
             self.saldo -= valor
-            return True
-        else:
-            print("Saldo insuficiente. Continue trabalhando para aumentar seu saldo.\n")
-            return False

@@ -1,7 +1,7 @@
 import json
 import time
 from Mecanicas.Dinheiro import Dinheiro
-from Mecanicas.Skills import CLASSES_ATIVAS
+from Progresso.Variaveis_Globais import CLASSES_ATIVAS
 from Mecanicas.FazerRoko import FazerRoko
 
 class SalvarJogo:

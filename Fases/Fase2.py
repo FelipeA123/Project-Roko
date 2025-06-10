@@ -8,7 +8,7 @@ from Mecanicas.Dinheiro import *
 from Mecanicas.Eficiencia import *
 from Personagens.Jogador import *
 from Mecanicas.FazerRoko import *
-from Mecanicas.Nivel_de_Ensino.Video_Yt import *
+from Mecanicas.Nivel_de_Ensino.VideoYoutube import *
 from Mecanicas.Nivel_de_Ensino.Cursinho import *
 from Mecanicas.Nivel_de_Ensino.Faculdade import *
 from Mecanicas.Nivel_de_Ensino.Mestrado import *
