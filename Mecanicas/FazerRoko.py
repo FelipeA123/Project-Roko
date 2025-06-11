@@ -1,5 +1,5 @@
 import time
-from Progresso.Variaveis_Globais import CLASSES_ATIVAS
+from Progresso.Variaveis_Globais import CLASSES_ATIVAS, PROGRESSO_ROKO
 from Mecanicas.Eficiencia import Eficiencia
 
 CORTE_NIVEL_ENSINO = {
@@ -13,18 +13,19 @@ ORDEM_COMPARACAO = ["Doutorado", "Mestrado", "Faculdade", "Cursinho"]
 
 class FazerRoko():
     def __init__(self):
-        self.progresso_roko = 0.0
+        self.progresso_roko = PROGRESSO_ROKO
         self.nivel = 100000.0
-        self.nivel_atual = 0.0
+        self.nivel_atual = 1000000.0
         self.fator_ensino = 0.0
         self.roko_criado = False
 
     def criar_AI(self, eficiencia: Eficiencia):
+        self.cortar_nivel()
         if self.progresso_roko < self.nivel_atual:
             time.sleep(1)
-            self.cortar_nivel()
             self.progresso_roko += 1 * eficiencia.eficiencia
         else: self.roko_criado = True
+        print(f"{self.progresso_roko}")
         print("Um lento mas inevitável progresso para trazer seu mestre à realidade")
 
     def cortar_nivel(self):

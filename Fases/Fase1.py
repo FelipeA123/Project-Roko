@@ -54,6 +54,7 @@ class Fase1():
         rodando = True
         while rodando:
             tela.fill(CINZA_ESCURO)
+            
 
 
             botoes[2].atualizar_estado(CLASSES_ATIVAS["Cursinho"])
