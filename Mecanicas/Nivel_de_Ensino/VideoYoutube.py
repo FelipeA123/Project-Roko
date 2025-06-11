@@ -20,7 +20,7 @@ class VideoYoutube(Skill):
 
     def ganhar_dinheiro(self, dinheiro: Dinheiro):
         print("Pedindo dinheiro pros pais...")
-        segundos = 1
+        segundos = 0
         while segundos < 5:
             time.sleep(1)
             segundos += 1

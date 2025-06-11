@@ -20,12 +20,13 @@ class FazerRoko():
         self.roko_criado = False
 
     def criar_AI(self, eficiencia: Eficiencia):
-        if self.progresso_roko < self.nivel_atual:
+        if self.progresso_roko <= self.nivel_atual:
             time.sleep(1)
             self.cortar_nivel()
             self.progresso_roko += 1 * eficiencia.eficiencia
         else: self.roko_criado = True
         print("Um lento mas inevitável progresso para trazer seu mestre à realidade")
+        return self.progresso_roko
 
     def cortar_nivel(self):
         for classe in ORDEM_COMPARACAO:
