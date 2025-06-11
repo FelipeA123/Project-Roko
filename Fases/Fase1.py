@@ -2,20 +2,17 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 import pygame
+import threading
 from pygame.locals import *
-
 from Display.Botao import Botao, BRANCO, CINZA_CLARO, CINZA_ESCURO, PRETO
 from Display.Log import Logger
 from Display.MensagemPermanente import MensagemPermanente
-
 from Progresso.Variaveis_Globais import CLASSES_ATIVAS
-
 from Mecanicas.Dinheiro import Dinheiro
 from Mecanicas.Eficiencia import Eficiencia
 from Mecanicas.FazerRoko import FazerRoko
 from Mecanicas.Nivel_de_Ensino.VideoYoutube import VideoYoutube
 from Mecanicas.Nivel_de_Ensino.Cursinho import Cursinho
-
 from Progresso.Progresso_jogo import SalvarJogo
 
 class Fase1():
@@ -27,6 +24,11 @@ class Fase1():
         self.cursinho = Cursinho()
         self.SalvarJogo = SalvarJogo(self.Dinheiro, self.fazerroko)
         global CLASSES_ATIVAS
+
+         # Flags de bloqueio para cada ação
+        self.cooldowns = [0, 0, 0, 0, 0]  # Um para cada botão
+        self.tempo_acao = [2, 2, 2, 2, 0]  # Tempo de bloqueio em segundos (ajuste conforme necessário)
+
 
     def rodar_jogo(self):
         pygame.init()
@@ -55,7 +57,9 @@ class Fase1():
         while rodando:
             tela.fill(CINZA_ESCURO)
             
-
+            # Atualiza estados dos botões conforme bloqueio
+            for i, botao in enumerate(botoes):
+                botao.desbloqueado = not self.cooldowns[i]
 
             botoes[2].atualizar_estado(CLASSES_ATIVAS["Cursinho"])
             botoes[3].atualizar_estado(CLASSES_ATIVAS["Cursinho"])
@@ -72,16 +76,13 @@ class Fase1():
                 if evento.type == pygame.QUIT:
                     rodando = False
                 if evento.type == pygame.MOUSEBUTTONDOWN:
-                    if botoes[0].verificar_clique(pos_mouse):
-                        self.VideoYoutube.subir_nivel(self.Eficiencia)
-                    if botoes[1].verificar_clique(pos_mouse):
-                        self.VideoYoutube.ganhar_dinheiro(self.Dinheiro)
-                    if botoes[2].verificar_clique(pos_mouse):
-                        self.cursinho.subir_nivel(self.Eficiencia)
-                    if botoes[3].verificar_clique(pos_mouse):
-                        self.cursinho.ganhar_dinheiro(self.Dinheiro, self.Eficiencia)
-                    if botoes[4].verificar_clique(pos_mouse):
-                        self.fazerroko.criar_AI(self.Eficiencia)
+                    for i, botao in enumerate(botoes):
+                        if botao.verificar_clique(pos_mouse) and botao.desbloqueado:
+                            self.cooldowns[i] = True  # Bloqueia o botão
+                            # Inicia a ação em uma thread
+                            threading.Thread(target=self.executar_acao, args=(i,)).start()
+
+
 
             for botao in botoes:
                 botao.atualizar(pos_mouse)
@@ -97,3 +98,17 @@ class Fase1():
         self.SalvarJogo.salvar()
         pygame.quit()
         sys.exit()
+
+    def executar_acao(self, i):
+        # Executa a ação correspondente ao botão i e desbloqueia ao terminar
+        if i == 0:
+            self.VideoYoutube.subir_nivel(self.Eficiencia)
+        elif i == 1:
+            self.VideoYoutube.ganhar_dinheiro(self.Dinheiro)
+        elif i == 2:
+            self.cursinho.subir_nivel(self.Eficiencia)
+        elif i == 3:
+            self.cursinho.ganhar_dinheiro(self.Dinheiro, self.Eficiencia)
+        elif i == 4:
+            self.fazerroko.criar_AI(self.Eficiencia)
+        self.cooldowns[i] = False  # Desbloqueia o botão ao terminar
