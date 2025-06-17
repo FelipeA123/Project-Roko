@@ -23,7 +23,9 @@ class Botao:
     def desenhar(self, superficie):
         pygame.draw.rect(superficie, CINZA_ESCURO, self.rect, border_radius=4)
         pygame.draw.rect(superficie, self.cor_borda, self.rect, 2, border_radius=4)
+     
         superficie.blit(self.texto_surf, self.texto_rect)
+
         if self.sublinhado and self.desbloqueado:
             pygame.draw.line(
                 superficie, BRANCO,

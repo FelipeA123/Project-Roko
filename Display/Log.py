@@ -2,7 +2,7 @@ import sys
 import pygame
 
 class Logger:
-    def __init__(self, x=10, y=400, max_mensagens=6, cor_texto=(255, 255, 255), fonte_nome='Arial', fonte_tamanho=16):
+    def __init__(self, x=10, y=500, max_mensagens=6, cor_texto=(255, 255, 255), fonte_nome='Arial', fonte_tamanho=16):
         pygame.font.init()
         self.x = x
         self.y = y
@@ -23,3 +23,7 @@ class Logger:
         for i, msg in enumerate(self.mensagens):
             texto_surf = self.fonte.render(msg, True, self.cor_texto)
             superficie.blit(texto_surf, (self.x, self.y + i * 20))
+
+
+    def flush(self):
+        pass  # Necessário para compatibilidade com sys.stdout

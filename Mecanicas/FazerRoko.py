@@ -14,7 +14,7 @@ ORDEM_COMPARACAO = ["Doutorado", "Mestrado", "Faculdade", "Cursinho"]
 class FazerRoko():
     def __init__(self):
         self.progresso_roko = PROGRESSO_ROKO
-        self.nivel = 100000.0
+        self.nivel = 1000000.0
         self.nivel_atual = 1000000.0
         self.fator_ensino = 0.0
         self.roko_criado = False
@@ -25,6 +25,11 @@ class FazerRoko():
             time.sleep(1)
             self.progresso_roko += 1 * eficiencia.eficiencia
         else: self.roko_criado = True
+
+        from Progresso import Variaveis_Globais
+        Variaveis_Globais.PROGRESSO_ROKO = self.progresso_roko
+        Variaveis_Globais.ROKO_CRIADO = self.roko_criado
+
         print(f"{self.progresso_roko}")
         print("Um lento mas inevitável progresso para trazer seu mestre à realidade")
 

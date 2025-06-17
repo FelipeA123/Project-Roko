@@ -1,48 +1,31 @@
 import time
+import threading
 from Mecanicas.Skills import Skill
 from Mecanicas.Dinheiro import Dinheiro
-from Mecanicas.Skills import CLASSES_ATIVAS
+from Mecanicas.Eficiencia import Eficiencia
+
+from Progresso.Variaveis_Globais import CLASSES_ATIVAS
+
 class Faculdade(Skill):
+
     def __init__(self):
         super().__init__()
         self.nivel_necessario = 20
         self.tempo_desbloqueio = 20
-    
-    def ativar(self):
-        self.ativo = True
-        CLASSES_ATIVAS["Faculdade"] = True
-
-    def desativar(self):
-        self.ativo = False
-        CLASSES_ATIVAS["Faculdade"] = False
 
     def efeito_especial(self):
-        dinheiro = Dinheiro()
-        dinheiro.adicao(500.0)
-        print("Efeito especial da Faculdade ativado!")
-        print("Você ganhará 1.0 de dinheiro a cada segundo enquanto o efeito estiver ativo.")
-        segundos = 0
-        ativo = True
+        CLASSES_ATIVAS["Mestrado"] = True
+        print("Mestrado desbloqueado, você pode trabalhar como programador.")
 
-        while True:
-            if ativo:
-                dinheiro.adicao(10.0)
-                print(f"Dinheiro atual: {dinheiro.saldo}")
-                segundos += 1
-                if not CLASSES_ATIVAS["Mestrado"]:
-                    if segundos >= 60:
-                        if dinheiro.subtracao(350.0):
-                            print("Taxa de 350 reais descontada para manter a Faculdade ativa.")
-                            segundos = 0
-                        else:
-                            print("Saldo insuficiente para manter a Faculdade ativo. Aguardando saldo suficiente para reativar...")
-                            ativo = False
-                            segundos = 0
-                else:
-                    # Tenta descontar a taxa a cada segundo até conseguir
-                    if dinheiro.subtracao(375.0):
-                        print("Faculdade reativada!")
-                        ativo = True
-                    else:
-                        print("Aguardando saldo suficiente para reativar a Faculdade...")
-                time.sleep(1)
+    def subir_nivel(self, eficiencia):
+        super().subir_nivel(eficiencia)
+        print("Você estuda diligentemente, gerando bons resultados.")
+
+    def ganhar_dinheiro(self, dinheiro: Dinheiro, eficiencia: Eficiencia):
+        print("Indo para o estágio...")
+        segundos = 0.0
+        while segundos < 10:
+            time.sleep(1)
+            segundos += eficiencia.eficiencia
+        dinheiro.adicao(250.0)
+        print ("Você foi pago em R$ 250, buscar café nunca foi tão valioso!")
