@@ -33,13 +33,16 @@ class Fase1():
 
          # Flags de bloqueio para cada ação
         self.cooldowns = [0] * 11  # Um para cada botão
-        self.tempo_acao = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0]  # Tempo de bloqueio em segundos (ajuste conforme necessário)
+        self.tempo_acao = [2, 2, 2, 2, 2, 2, 10, 10, 10, 10, 0]  # Tempo de bloqueio em segundos (ajuste conforme necessário)
 
 
     def rodar_jogo(self):
         pygame.init()
-        largura, altura = 1000, 1000
-        tela = pygame.display.set_mode((largura, altura))
+        largura_original, altura_original = 1000, 1000
+        info = pygame.display.Info()
+        largura_tela, altura_tela = info.current_w, info.current_h
+        tela = pygame.display.set_mode((largura_tela, altura_tela), pygame.FULLSCREEN)
+        superficie_base = pygame.Surface((largura_original, altura_original))
         pygame.display.set_caption("Roko's Basilisk")
 
         log = Logger()
@@ -70,13 +73,39 @@ class Fase1():
         rodando = True
         while rodando:
             if self.fazerroko.roko_criado:
-                self.finalizar_jogo(tela)
+                superficie_base.finalizar_jogo(tela)
 
-            tela.fill(CINZA_ESCURO)
-            
+            superficie_base.fill(CINZA_ESCURO)
+
+            # --- Desenhar botão "X" no canto superior direito ---
+            x_size = 40
+            x_margin = 10
+            x_rect = pygame.Rect(
+                largura_original - x_size - x_margin,
+                x_margin,
+                x_size,
+                x_size
+            )
+            pygame.draw.rect(superficie_base, (200, 0, 0), x_rect)
+            fonte_x = pygame.font.SysFont('Arial', 32, bold=True)
+            texto_x = fonte_x.render("X", True, (255, 255, 255))
+            texto_x_rect = texto_x.get_rect(center=x_rect.center)
+            superficie_base.blit(texto_x, texto_x_rect)
+
+             
+            # Pegue a posição do mouse na tela cheia
+            pos_mouse_tela = pygame.mouse.get_pos()
+            # Converta para a escala da superficie_base
+            pos_mouse = (
+                int(pos_mouse_tela[0] * largura_original / largura_tela),
+                int(pos_mouse_tela[1] * altura_original / altura_tela)
+            )
+
             # Atualiza estados dos botões conforme bloqueio
             for i, botao in enumerate(botoes):
-                botao.desbloqueado = not self.cooldowns[i]
+                botao.desbloqueado = not self.cooldowns[i]    
+                botao.atualizar(pos_mouse)
+                botao.desenhar(superficie_base)
 
             botoes[1].atualizar_estado(CLASSES_ATIVAS["Cursinho"])
             botoes[6].atualizar_estado(CLASSES_ATIVAS["Cursinho"])
@@ -95,30 +124,29 @@ class Fase1():
             mensagens[1].definir_valor(lambda: f"{self.fazerroko.progresso_percentual():.2f}%")
             mensagens[2].definir_valor(lambda: f"{self.Eficiencia.eficiencia:.2f}x")
 
- 
-            pos_mouse = pygame.mouse.get_pos()
-
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT:
                     rodando = False
                 if evento.type == pygame.MOUSEBUTTONDOWN:
+                    # Verifica se clicou no "X"
+                    if x_rect.collidepoint(pos_mouse):
+                        rodando = False
+                    # Verifica se clicou em algum botão
                     for i, botao in enumerate(botoes):
                         if botao.verificar_clique(pos_mouse) and botao.desbloqueado:
-                            self.cooldowns[i] = True  # Bloqueia o botão
-                            # Inicia a ação em uma thread
+                            self.cooldowns[i] = True
                             threading.Thread(target=self.executar_acao, args=(i,)).start()
 
-
-
-            for botao in botoes:
-                botao.atualizar(pos_mouse)
-                botao.desenhar(tela)
-
-            log.desenhar(tela)
+            log.desenhar(superficie_base)
             for mensagem in mensagens:
-                mensagem.desenhar(tela)
+                mensagem.desenhar(superficie_base)
             
             pygame.display.flip()
+
+            # Redimensiona a superficie_base para a tela cheia mantendo proporção
+            superficie_redimensionada = pygame.transform.smoothscale(superficie_base, (largura_tela, altura_tela))
+            tela.blit(superficie_redimensionada, (0, 0))
+            pygame.display.flip()            
         
         self.SalvarJogo.salvar()
         pygame.quit()
