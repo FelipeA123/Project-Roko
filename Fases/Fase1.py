@@ -28,12 +28,19 @@ class Fase1():
         self.Faculdade = Faculdade()
         self.Mestrado = Mestrado()
         self.Doutorado = Doutorado()
-        self.SalvarJogo = SalvarJogo(self.Dinheiro, self.fazerroko)
+        self.SalvarJogo = SalvarJogo(self.Dinheiro, self.fazerroko, self.Eficiencia)
         global CLASSES_ATIVAS
 
+        from Progresso.Variaveis_Globais import EFICIENCIA_ITENS
+
+        if EFICIENCIA_ITENS is not None:
+            for ativo, item in zip(EFICIENCIA_ITENS, self.Eficiencia.itens):
+                item["ativo"] = ativo
+            self.Eficiencia.atualizar_eficiencia()
+
          # Flags de bloqueio para cada ação
-        self.cooldowns = [0] * 11  # Um para cada botão
-        self.tempo_acao = [2, 2, 2, 2, 2, 2, 10, 10, 10, 10, 0]  # Tempo de bloqueio em segundos (ajuste conforme necessário)
+        self.cooldowns = [0] * 12  # Um para cada botão
+        self.tempo_acao = [2, 2, 2, 2, 2, 2, 10, 10, 10, 10, 11, 0]  # Tempo de bloqueio em segundos (ajuste conforme necessário)
 
 
     def rodar_jogo(self):
@@ -60,6 +67,7 @@ class Fase1():
             Botao(625, 250, 200, 50, "Estágio", desbloqueado = CLASSES_ATIVAS["Faculdade"]),
             Botao(625, 325, 200, 50, "Trabalho de dev", desbloqueado = CLASSES_ATIVAS["Mestrado"]),
             Botao(625, 400, 200, 50, "Consultoria", desbloqueado = CLASSES_ATIVAS["Doutorado"]),
+            Botao(625, 475, 200, 50, "Abrir loja de eficiencia", desbloqueado = True),
 
             Botao(275, 100, 300, 100, "Criar AI", desbloqueado = CLASSES_ATIVAS["Cursinho"])
         ]
@@ -109,7 +117,7 @@ class Fase1():
 
             botoes[1].atualizar_estado(CLASSES_ATIVAS["Cursinho"])
             botoes[6].atualizar_estado(CLASSES_ATIVAS["Cursinho"])
-            botoes[10].atualizar_estado(CLASSES_ATIVAS["Cursinho"])
+            botoes[11].atualizar_estado(CLASSES_ATIVAS["Cursinho"])
 
             botoes[2].atualizar_estado(CLASSES_ATIVAS["Faculdade"])
             botoes[7].atualizar_estado(CLASSES_ATIVAS["Faculdade"])
@@ -135,7 +143,11 @@ class Fase1():
                     for i, botao in enumerate(botoes):
                         if botao.verificar_clique(pos_mouse) and botao.desbloqueado:
                             self.cooldowns[i] = True
-                            threading.Thread(target=self.executar_acao, args=(i,)).start()
+                            if i == 10:
+                                # Loja de eficiência deve rodar na thread principal!
+                                self.executar_acao(i)
+                            else:
+                                threading.Thread(target=self.executar_acao, args=(i,)).start()
 
             log.desenhar(superficie_base)
             for mensagem in mensagens:
@@ -176,9 +188,64 @@ class Fase1():
         elif i == 9:
             self.Doutorado.ganhar_dinheiro(self.Dinheiro, self.Eficiencia)
         elif i == 10:
+            self.abrir_loja_eficiencia(pygame.display.get_surface())
+        elif i == 11:
             self.fazerroko.criar_AI(self.Eficiencia)
         self.cooldowns[i] = False  # Desbloqueia o botão ao terminar
-        
+
+    def abrir_loja_eficiencia(self, tela):
+        rodando_loja = True
+        fonte = pygame.font.SysFont('Arial', 28)
+        x_size = 40
+        x_margin = 10
+        largura, altura = tela.get_size()
+        clock = pygame.time.Clock()
+        while rodando_loja:
+            tela.fill((40, 40, 40))
+            # Botão X para fechar
+            x_rect = pygame.Rect(largura - x_size - x_margin, x_margin, x_size, x_size)
+            pygame.draw.rect(tela, (200, 0, 0), x_rect)
+            texto_x = fonte.render("X", True, (255, 255, 255))
+            tela.blit(texto_x, texto_x.get_rect(center=x_rect.center))
+
+            # Título
+            titulo = fonte.render("Loja de Eficiência", True, (255, 255, 255))
+            tela.blit(titulo, (largura // 2 - titulo.get_width() // 2, 30))
+
+            # Lista de itens
+            item_rects = []
+            for idx, item in enumerate(self.Eficiencia.itens):
+                y = 100 + idx * 45
+                cor = (100, 200, 100) if not item["ativo"] else (150, 150, 150)
+                item_rect = pygame.Rect(80, y, 700, 40)
+                pygame.draw.rect(tela, cor, item_rect, border_radius=8)
+                texto = f'{item["nome"]} | R$ {item["custo"]:.2f} | +{item["modificador"]} eficiência'
+                if item["ativo"]:
+                    texto += " (Comprado)"
+                txt = fonte.render(texto, True, (0, 0, 0))
+                tela.blit(txt, (90, y + 5))
+                item_rects.append(item_rect)
+
+            # Saldo
+            saldo_txt = fonte.render(f"Saldo: R$ {self.Dinheiro.saldo:.2f}", True, (255, 255, 0))
+            tela.blit(saldo_txt, (80, altura - 60))
+
+            pygame.display.flip()
+            clock.tick(60)
+
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if evento.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    if x_rect.collidepoint(pos):
+                        rodando_loja = False
+                    for idx, item in enumerate(self.Eficiencia.itens):
+                        if not item["ativo"] and item_rects[idx].collidepoint(pos):
+                            comprou = self.Eficiencia.comprar_item(item["nome"], self.Dinheiro)
+                            if comprou:
+                                self.SalvarJogo.salvar()   
 
     def finalizar_jogo(self, tela):
         tela.fill((0, 0, 0))  # Tela preta

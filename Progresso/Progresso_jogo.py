@@ -3,18 +3,21 @@ import time
 from Mecanicas.Dinheiro import Dinheiro
 from Progresso.Variaveis_Globais import CLASSES_ATIVAS
 from Mecanicas.FazerRoko import FazerRoko
+from Mecanicas.Eficiencia import Eficiencia
 
 class SalvarJogo:
-    def __init__(self, dinheiro: Dinheiro, fazerroko: FazerRoko):
+    def __init__(self, dinheiro: Dinheiro, fazerroko: FazerRoko, eficiencia: Eficiencia):
         self.dinheiro = dinheiro
         self.fazerroko = fazerroko
+        self.eficiencia = eficiencia
 
     def salvar(self):
         save_data = {
             "dinheiro": self.dinheiro.saldo,
             "classes_ativas": CLASSES_ATIVAS,
             "roko_criado": self.fazerroko.roko_criado,
-            "progresso_roko" : self.fazerroko.progresso_roko
+            "progresso_roko" : self.fazerroko.progresso_roko,
+            "eficiencia_itens": [item["ativo"] for item in self.eficiencia.itens]
             # Adicione outros dados do jogo aqui
         }
         with open("Progresso/save.json", "w") as f:

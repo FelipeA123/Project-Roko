@@ -21,7 +21,11 @@ class Dinheiro():
     def adicao(self, valor: float):
         if valor > 0:
             self.saldo += valor
+            return True
+        return False
         
-    def subtracao(self, valor:float):
-        if valor > 0 and self.saldo >=valor:
+    def subtracao(self, valor: float):
+        if valor > 0 and self.saldo >= valor:
             self.saldo -= valor
+            return True
+        return False

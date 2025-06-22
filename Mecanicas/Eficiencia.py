@@ -46,3 +46,5 @@ class Eficiencia():
                 if dinheiro.subtracao(item["custo"]):
                     item["ativo"] = True
                     self.atualizar_eficiencia()
+                    return True
+        return False
