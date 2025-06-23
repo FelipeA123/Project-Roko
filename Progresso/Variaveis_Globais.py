@@ -10,9 +10,9 @@ PROGRESSO_ROKO = 0.0
 EFICIENCIA_ITENS = None
 
 if getattr(sys, 'frozen', False):
-    BASE_DIR = sys._MEIPASS
+    BASE_DIR = os.path.dirname(sys.executable)
 else:
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    BASE_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
 
 CAMINHO_SAVE = os.path.join(BASE_DIR, "Progresso", "save.json")
 

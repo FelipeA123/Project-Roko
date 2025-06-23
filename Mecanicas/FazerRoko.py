@@ -24,7 +24,10 @@ class FazerRoko():
         if self.progresso_roko < self.nivel_atual:
             time.sleep(1)
             self.progresso_roko += 1 * eficiencia.eficiencia
-        else: self.roko_criado = True
+            if self.progresso_roko >= self.nivel_atual:
+                self.roko_criado = True
+        else:
+            self.roko_criado = True
 
         from Progresso import Variaveis_Globais
         Variaveis_Globais.PROGRESSO_ROKO = self.progresso_roko

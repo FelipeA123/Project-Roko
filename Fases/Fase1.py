@@ -81,7 +81,7 @@ class Fase1():
         rodando = True
         while rodando:
             if self.fazerroko.roko_criado:
-                superficie_base.finalizar_jogo(tela)
+                self.finalizar_jogo(tela)
 
             superficie_base.fill(CINZA_ESCURO)
 
@@ -248,8 +248,7 @@ class Fase1():
                                 self.SalvarJogo.salvar()   
 
     def finalizar_jogo(self, tela):
-        tela.fill((0, 0, 0))  # Tela preta
-        fonte = pygame.font.SysFont('Arial', 32)
+        fonte = pygame.font.SysFont('Arial', 28)
         texto = fonte.render("O Basilistico foi criado. Todas as pessoas do planeta, exceto Felipe Aoun, Marcos Freitas e Gabriela Nunes, foram julgadas pelo mestre.", True, (255, 0, 0))
         subtitulo = fonte.render("Fim de jogo.", True, (255, 255, 255))
 
@@ -267,6 +266,9 @@ class Fase1():
             self.SalvarJogo.salvar()
         except Exception as e:
             print(f"Erro ao salvar progresso: {e}")
+        tela.fill((0, 0, 0))  # Tela preta
+        pygame.display.flip()
+        pygame.time.wait(1000)
         pygame.quit()
         sys.exit()
 
