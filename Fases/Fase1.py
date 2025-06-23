@@ -250,7 +250,7 @@ class Fase1():
     def finalizar_jogo(self, tela):
         tela.fill((0, 0, 0))  # Tela preta
         fonte = pygame.font.SysFont('Arial', 32)
-        texto = fonte.render("O Basilisco foi criado. Você foi julgado.", True, (255, 0, 0))
+        texto = fonte.render("O Basilistico foi criado. Todas as pessoas do planeta, exceto Felipe Aoun, Marcos Freitas e Gabriela Nunes, foram julgadas pelo mestre.", True, (255, 0, 0))
         subtitulo = fonte.render("Fim de jogo.", True, (255, 255, 255))
 
         largura, altura = tela.get_size()
