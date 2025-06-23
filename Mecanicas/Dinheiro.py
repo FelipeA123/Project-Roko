@@ -1,6 +1,11 @@
 import json
 import os
+import sys
 
+if getattr(sys, 'frozen', False):
+    BASE_DIR = sys._MEIPASS
+else:
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 class Dinheiro():
     def __init__(self):
         self.saldo = 0.0
@@ -8,7 +13,7 @@ class Dinheiro():
         self.carregar_saldo()
 
     def carregar_saldo(self):
-        caminho = os.path.join("Progresso", "save.json")
+        caminho = os.path.join(BASE_DIR, "Progresso", "save.json")
         if os.path.exists(caminho):
             with open(caminho, "r") as f:
                 try:

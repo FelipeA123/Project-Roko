@@ -263,7 +263,10 @@ class Fase1():
 
     # Espera 5 segundos antes de fechar o jogo
         pygame.time.wait(5000)
-        self.SalvarJogo.salvar()
+        try:
+            self.SalvarJogo.salvar()
+        except Exception as e:
+            print(f"Erro ao salvar progresso: {e}")
         pygame.quit()
         sys.exit()
 

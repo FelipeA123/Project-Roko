@@ -1,3 +1,5 @@
+import os
+import sys
 import json
 import time
 from Mecanicas.Dinheiro import Dinheiro
@@ -5,11 +7,18 @@ from Progresso.Variaveis_Globais import CLASSES_ATIVAS
 from Mecanicas.FazerRoko import FazerRoko
 from Mecanicas.Eficiencia import Eficiencia
 
+if getattr(sys, 'frozen', False):
+    BASE_DIR = sys._MEIPASS
+else:
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 class SalvarJogo:
     def __init__(self, dinheiro: Dinheiro, fazerroko: FazerRoko, eficiencia: Eficiencia):
         self.dinheiro = dinheiro
         self.fazerroko = fazerroko
         self.eficiencia = eficiencia
+        self.SAVE_DIR = os.path.join(BASE_DIR, "Progresso")
+        self.SAVE_PATH = os.path.join(self.SAVE_DIR, "save.json")
 
     def salvar(self):
         save_data = {
@@ -20,7 +29,8 @@ class SalvarJogo:
             "eficiencia_itens": [item["ativo"] for item in self.eficiencia.itens]
             # Adicione outros dados do jogo aqui
         }
-        with open("Progresso/save.json", "w") as f:
+        os.makedirs(self.SAVE_DIR, exist_ok=True)  # Garante que a pasta existe
+        with open(self.SAVE_PATH, "w") as f:
             json.dump(save_data, f)
         print("Progresso salvo!")
 

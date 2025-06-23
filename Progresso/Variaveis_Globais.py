@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 # Variáveis globais
 CLASSES_ATIVAS = {}
@@ -8,7 +9,12 @@ ROKO_CRIADO = False
 PROGRESSO_ROKO = 0.0
 EFICIENCIA_ITENS = None
 
-CAMINHO_SAVE = os.path.join("Progresso", "save.json")
+if getattr(sys, 'frozen', False):
+    BASE_DIR = sys._MEIPASS
+else:
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+CAMINHO_SAVE = os.path.join(BASE_DIR, "Progresso", "save.json")
 
 def carregar_dados():
     global CLASSES_ATIVAS, SALDO, ROKO_CRIADO, PROGRESSO_ROKO, EFICIENCIA_ITENS
