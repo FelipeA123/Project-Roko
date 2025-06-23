@@ -19,7 +19,7 @@ class Cursinho(Skill):
 
     def efeito_especial(self):
         CLASSES_ATIVAS["Faculdade"] = True
-        print("Faculdade desbloqueada, você pode estágio para ganhar dinheiro.")
+        print("Faculdade desbloqueada, agora você pode fazer estágio para ganhar dinheiro.")
 
     def subir_nivel(self, eficiencia):
         super().subir_nivel(eficiencia)
