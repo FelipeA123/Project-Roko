@@ -8,6 +8,7 @@ SALDO = 0.0
 ROKO_CRIADO = False
 PROGRESSO_ROKO = 0.0
 EFICIENCIA_ITENS = None
+EFICIENCIA_VALOR = 1.0
 
 if getattr(sys, 'frozen', False):
     BASE_DIR = os.path.dirname(sys.executable)
@@ -17,7 +18,7 @@ else:
 CAMINHO_SAVE = os.path.join(BASE_DIR, "Progresso", "save.json")
 
 def carregar_dados():
-    global CLASSES_ATIVAS, SALDO, ROKO_CRIADO, PROGRESSO_ROKO, EFICIENCIA_ITENS
+    global CLASSES_ATIVAS, SALDO, ROKO_CRIADO, PROGRESSO_ROKO, EFICIENCIA_ITENS, EFICIENCIA_VALOR
 
     if os.path.exists(CAMINHO_SAVE):
         with open(CAMINHO_SAVE, "r") as f:
@@ -28,6 +29,7 @@ def carregar_dados():
                 ROKO_CRIADO = dados.get("roko_criado", False)
                 PROGRESSO_ROKO = dados.get("progresso_roko", 0.0)
                 EFICIENCIA_ITENS = dados.get("eficiencia_itens", None)
+                EFICIENCIA_VALOR = dados.get("eficiencia_valor", 1.0)
             except Exception:
                 # Em caso de erro, usa valores padrão
                 SALDO = 0.0
@@ -35,6 +37,7 @@ def carregar_dados():
                 ROKO_CRIADO = False
                 PROGRESSO_ROKO = 0.0
                 EFICIENCIA_ITENS = None
+                EFICIENCIA_VALOR = 1.0
     else:
         # Inicializa com valores padrão
         SALDO = 0.0
@@ -47,3 +50,4 @@ def carregar_dados():
         ROKO_CRIADO = False
         PROGRESSO_ROKO = 0.0
         EFICIENCIA_ITENS = None
+        EFICIENCIA_VALOR = 1.0

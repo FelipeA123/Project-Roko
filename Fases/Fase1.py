@@ -31,12 +31,21 @@ class Fase1():
         self.SalvarJogo = SalvarJogo(self.Dinheiro, self.fazerroko, self.Eficiencia)
         global CLASSES_ATIVAS
 
-        from Progresso.Variaveis_Globais import EFICIENCIA_ITENS
+        from Progresso.Variaveis_Globais import EFICIENCIA_ITENS, EFICIENCIA_VALOR
 
         if EFICIENCIA_ITENS is not None:
             for ativo, item in zip(EFICIENCIA_ITENS, self.Eficiencia.itens):
                 item["ativo"] = ativo
             self.Eficiencia.atualizar_eficiencia()
+
+        # Aplicar o valor salvo de eficiência (se houver). Isso garante que o
+        # multiplicador exibido/armazenado seja restaurado entre sessões.
+        # Pelo amor de Deus, nao me peça pra explicar isso de novo
+        try:
+            self.Eficiencia.eficiencia = EFICIENCIA_VALOR
+        except NameError:
+            # Em caso de import falho ou variável ausente, mantemos o valor calculado
+            pass
 
          # Flags de bloqueio para cada ação
         self.cooldowns = [0] * 12  # Um para cada botão
@@ -219,7 +228,11 @@ class Fase1():
                 cor = (100, 200, 100) if not item["ativo"] else (150, 150, 150)
                 item_rect = pygame.Rect(80, y, 700, 40)
                 pygame.draw.rect(tela, cor, item_rect, border_radius=8)
+                # Mostrar nome, custo, bônus de eficiência e quantidade possuída
+                quantidade = item.get("quantidade", 0)
                 texto = f'{item["nome"]} | R$ {item["custo"]:.2f} | +{item["modificador"]} eficiência'
+                if quantidade > 0:
+                    texto += f' | {quantidade} unidade' + ("s" if quantidade != 1 else "")
                 if item["ativo"]:
                     texto += " (Comprado)"
                 txt = fonte.render(texto, True, (0, 0, 0))
@@ -242,10 +255,11 @@ class Fase1():
                     if x_rect.collidepoint(pos):
                         rodando_loja = False
                     for idx, item in enumerate(self.Eficiencia.itens):
-                        if not item["ativo"] and item_rects[idx].collidepoint(pos):
+                        # Permitir comprar repetidamente: cada clique compra mais 1 unidade.
+                        if item_rects[idx].collidepoint(pos):
                             comprou = self.Eficiencia.comprar_item(item["nome"], self.Dinheiro)
                             if comprou:
-                                self.SalvarJogo.salvar()   
+                                self.SalvarJogo.salvar()
 
     def finalizar_jogo(self, tela):
         tela.fill((0, 0, 0))  # Tela preta

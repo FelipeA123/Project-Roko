@@ -28,7 +28,9 @@ class SalvarJogo:
             "classes_ativas": CLASSES_ATIVAS,
             "roko_criado": self.fazerroko.roko_criado,
             "progresso_roko" : self.fazerroko.progresso_roko,
-            "eficiencia_itens": [item["ativo"] for item in self.eficiencia.itens]
+            "eficiencia_itens": [item["ativo"] for item in self.eficiencia.itens],
+            # Salva também o valor atual de eficiência (multiplicador)
+            "eficiencia_valor": self.eficiencia.eficiencia
             # Adicione outros dados do jogo aqui
         }
         os.makedirs(self.SAVE_DIR, exist_ok=True)  # Garante que a pasta existe
